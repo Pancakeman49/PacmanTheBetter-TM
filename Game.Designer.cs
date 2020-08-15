@@ -1,6 +1,6 @@
 ﻿namespace Pacman_FOR_REAL_THIS_TIME
 {
-    partial class Form1
+    partial class Game
     {
         /// <summary>
         /// Required designer variable.

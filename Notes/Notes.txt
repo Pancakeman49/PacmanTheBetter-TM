@@ -1,0 +1,12 @@
+﻿Pac man
+
+TODO:
+1. Create clases (Form, Pacman, Area, Food, Enemy)
+2. Add keyborad (wasd) controls and mvmnt logic
+[0] hero mvmnt logic
+3. Enemy mvmnt logic
+4. Food logic
+5. Collisions
+6. Scoring with animation
+7. Level map design
+8. Finalize, polish and relese beta.

@@ -16,7 +16,7 @@ namespace Pacman_FOR_REAL_THIS_TIME
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new Game());
         }
     }
 }
