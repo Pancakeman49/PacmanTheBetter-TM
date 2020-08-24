@@ -52,16 +52,18 @@ namespace Pacman_FOR_REAL_THIS_TIME
             mainTimer.Tick += MaintTimer_Tick;
             mainTimer.Start();
         }
-        
         private void MaintTimer_Tick(object sender, EventArgs e)
         {
             MovePacman();
             PacmanBorderCollision();
             MoveEnemys();
+            EnemyBorderCollision();
+            EnemyPacmanCollision();
         }
         private void AddPacman()
         {
             this.Controls.Add(pacman);
+            pacman.Parent = lvl;
             pacman.BringToFront();
         }
         private void MoveEnemys()
@@ -82,42 +84,48 @@ namespace Pacman_FOR_REAL_THIS_TIME
             switch (e.KeyCode)
             {
                 case Keys.Right:
+                    pacman.Direction = "right";
                     pacman.HorizontalVelocity = pacman.Step;
                     pacman.VerticalVelocity = 0;
                     break;
                 case Keys.Down:
+                    pacman.Direction = "down";
                     pacman.HorizontalVelocity = 0;
                     pacman.VerticalVelocity = pacman.Step;
                     break;
                 case Keys.Left:
+                    pacman.Direction = "left";
                     pacman.HorizontalVelocity = -pacman.Step;
                     pacman.VerticalVelocity = 0;
                     break;
                 case Keys.Up:
+                    pacman.Direction = "up";
                     pacman.HorizontalVelocity = 0;
                     pacman.VerticalVelocity = -pacman.Step;
                     break;
                 case Keys.D:
+                    pacman.Direction = "right";
                     pacman.HorizontalVelocity = pacman.Step;
                     pacman.VerticalVelocity = 0;
                     break;
                 case Keys.S:
+                    pacman.Direction = "down";
                     pacman.HorizontalVelocity = 0;
                     pacman.VerticalVelocity = pacman.Step;
                     break;
                 case Keys.A:
+                    pacman.Direction = "left";
                     pacman.HorizontalVelocity = -pacman.Step;
                     pacman.VerticalVelocity = 0;
                     break;
                 case Keys.W:
+                    pacman.Direction = "up";
                     pacman.HorizontalVelocity = 0;
                     pacman.VerticalVelocity = -pacman.Step;
                     break;
-
-
             }
+            SetRandomEnemyDirection();
         }
-        
         private void PacmanBorderCollision()
         {
             if (pacman.Left > lvl.Left + lvl.Width)
@@ -137,7 +145,6 @@ namespace Pacman_FOR_REAL_THIS_TIME
                 pacman.Top = lvl.Top + lvl.Height;
             }
         }
-
         private void AddEnemys()
         {
             Enemy enemy;
@@ -145,10 +152,62 @@ namespace Pacman_FOR_REAL_THIS_TIME
             {
                 enemy = new Enemy();
                 enemy.Location = new Point(rand.Next(100,400), rand.Next(100,400));
+                enemy.SetDirection(rand.Next(1,5));
                 enemies.Add(enemy);
                 this.Controls.Add(enemy);
+                enemy.Parent = lvl;
                 enemy.BringToFront();
             }
+        }
+        private void EnemyBorderCollision()
+        {
+            foreach (var enemy in enemies)
+            {
+                if (enemy.Top < lvl.Top) //From "up" to "down"
+                {
+                    enemy.SetDirection(2);
+                }
+                if (enemy.Top > lvl.Height - enemy.Height) //From "down" to "up"
+                {
+                    enemy.SetDirection(4);
+                }
+                if (enemy.Left < lvl.Left) //From "left" to "right"
+                {
+                    enemy.SetDirection(1);
+                }
+                if (enemy.Left > lvl.Width - enemy.Width) //From "right" to "left"
+                {
+                    enemy.SetDirection(3);
+                }
+            }
+        }
+        private void SetRandomEnemyDirection()
+        {
+            foreach (var enemy in enemies)
+            {
+                enemy.SetDirection(rand.Next(1,5));
+            }
+        }
+        private void EnemyPacmanCollision()
+        {
+            foreach (var enemy in enemies)
+            {
+                if (pacman.Bounds.IntersectsWith(enemy.Bounds))
+                {
+                    GameOver();
+                }
+            }
+        }
+        private void GameOver()
+        {
+            this.Controls.Clear();
+            Label label = new Label();
+            label.Text = "GAME OVER";
+            label.Font = new Font("Comic Sans MS", 24, FontStyle.Regular);
+            label.Location = new Point(ClientRectangle.Width / 2, ClientRectangle.Height / 2);
+            label.Size = new Size(300,50);
+            this.Controls.Add(label);
+            label.BringToFront();
         }
     }
 }
